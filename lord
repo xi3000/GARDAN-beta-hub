@@ -1,18 +1,54 @@
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+-- Kiểm tra xem Fluent có tải thành công không
+if not Fluent then
+    warn("⚠ Lỗi tải Fluent UI. Kiểm tra lại kết nối mạng hoặc link tải!")
+    return
+end
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 local Window = Fluent:CreateWindow({
-    --ai skid thì nhớ đổi tên =)
-    --táo hub , aniee hub :>
     Title = "gardan Hub",
     SubTitle = "beta script",
     TabWidth = 160,
     Size = UDim2.fromOffset(530, 350),
-    Acrylic = true, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = true, 
     Theme = "Darker",
-    MinimizeKey = Enum.KeyCode.End -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.RightShift -- Thay phím tắt để mở menu
 })
+
+-- Kiểm tra xem Window có được tạo không
+if not Window then
+    warn("⚠ Lỗi tạo giao diện!")
+    return
+end
+
+-- 🟢 TẠO TAB FARM 🟢
+local FarmTab = Window:AddTab({ Title = "Farm", Icon = "rbxassetid://1234567890" })
+
+-- Kiểm tra xem FarmTab có được tạo không
+if not FarmTab then
+    warn("⚠ Lỗi tạo Tab Farm!")
+    return
+end
+
+Window:SelectTab(FarmTab) -- Đảm bảo tab Farm hiển thị ngay từ đầu
+
+-- Tạo một khu vực (Section) trong Tab Farm
+local FarmSection = FarmTab:AddSection("Farm Options")
+
+-- Thêm nút bật/tắt Auto Farm
+FarmSection:AddToggle("AutoFarm", { Title = "Bật Auto Farm", Default = false }, function(state)
+    if state then
+        print("✅ Auto Farm Đã Bật!")
+        -- Thêm code farm tại đây
+    else
+        print("⛔ Auto Farm Đã Tắt!")
+        -- Thêm code để dừng farm tại đây
+    end
+end)
 local Tabs = {
     Main = Window:AddTab({ Title = "Main Farm", Icon = "home" }),
     Setting = Window:AddTab({ Title = "Setting Farming", Icon = "settings" }),
