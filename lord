@@ -2,13 +2,11 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
--- Kiểm tra xem Fluent có tải thành công không
-if not Fluent then
-    warn("⚠ Lỗi tải Fluent UI. Kiểm tra lại kết nối mạng hoặc link tải!")
-    return
-end
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local AutoFarmEnabled = false
 
---------------------------------------------------------------------------------------------------------------------------------------------
+-- Tạo cửa sổ giao diện
 local Window = Fluent:CreateWindow({
     Title = "gardan Hub",
     SubTitle = "beta script",
@@ -16,37 +14,40 @@ local Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(530, 350),
     Acrylic = true, 
     Theme = "Darker",
-    MinimizeKey = Enum.KeyCode.RightShift -- Thay phím tắt để mở menu
+    MinimizeKey = Enum.KeyCode.RightShift
 })
 
--- Kiểm tra xem Window có được tạo không
-if not Window then
-    warn("⚠ Lỗi tạo giao diện!")
-    return
-end
-
--- 🟢 TẠO TAB FARM 🟢
+-- Tạo Tab Farm
 local FarmTab = Window:AddTab({ Title = "Farm", Icon = "rbxassetid://1234567890" })
+Window:SelectTab(FarmTab)
 
--- Kiểm tra xem FarmTab có được tạo không
-if not FarmTab then
-    warn("⚠ Lỗi tạo Tab Farm!")
-    return
-end
-
-Window:SelectTab(FarmTab) -- Đảm bảo tab Farm hiển thị ngay từ đầu
-
--- Tạo một khu vực (Section) trong Tab Farm
+-- Tạo khu vực trong Tab Farm
 local FarmSection = FarmTab:AddSection("Farm Options")
 
--- Thêm nút bật/tắt Auto Farm
+-- Hàm Auto Farm
+local function AutoFarm()
+    while AutoFarmEnabled do
+        -- Kiểm tra nhân vật có tồn tại không
+        if LocalPlayer and LocalPlayer.Character then
+            local humanoidRootPart = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                -- Ví dụ: Dịch chuyển đến vị trí farm
+                humanoidRootPart.CFrame = CFrame.new(Vector3.new(100, 50, 200)) -- Thay tọa độ farm phù hợp
+                print("✅ Đang Farm...") 
+            end
+        end
+        wait(1) -- Chờ 1 giây trước khi tiếp tục farm
+    end
+end
+
+-- Nút bật/tắt Auto Farm
 FarmSection:AddToggle("AutoFarm", { Title = "Bật Auto Farm", Default = false }, function(state)
+    AutoFarmEnabled = state
     if state then
         print("✅ Auto Farm Đã Bật!")
-        -- Thêm code farm tại đây
+        task.spawn(AutoFarm) -- Chạy farm không làm đứng game
     else
         print("⛔ Auto Farm Đã Tắt!")
-        -- Thêm code để dừng farm tại đây
     end
 end)
 local Tabs = {
